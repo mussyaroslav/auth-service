@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package api.AuthService;
+option go_package = "github.com/mussyaroslav/auth-service/generate/api.authservice";
+
+// Определение сервиса AuthService
+service AuthService {
+  rpc Ping (PingRequest) returns (PingResponse) {}
+}
+
+message PingRequest {
+}
+
+message PingResponse {
+  bool ok = 1;
+}
