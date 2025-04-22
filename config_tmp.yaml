@@ -1,0 +1,17 @@
+env: local # local|dev|prod
+
+log_file:
+  use: false
+  name: "auth-service.log"
+
+grpc:
+  port: 50101
+  timeout: 15s
+
+storage:
+  user: ""
+  pass: ""
+  host: ""
+  port: 5432
+  database: ""
+  schema: ""
