@@ -19,7 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AuthService_Ping_FullMethodName = "/api.AuthService.AuthService/Ping"
+	AuthService_Ping_FullMethodName         = "/api.AuthService.AuthService/Ping"
+	AuthService_UserRegister_FullMethodName = "/api.AuthService.AuthService/UserRegister"
 )
 
 // AuthServiceClient is the client API for AuthService service.
@@ -29,6 +30,7 @@ const (
 // Определение сервиса AuthService
 type AuthServiceClient interface {
 	Ping(ctx context.Context, in *PingRequest, opts ...grpc.CallOption) (*PingResponse, error)
+	UserRegister(ctx context.Context, in *UserRegisterRequest, opts ...grpc.CallOption) (*UserRegisterResponse, error)
 }
 
 type authServiceClient struct {
@@ -49,6 +51,16 @@ func (c *authServiceClient) Ping(ctx context.Context, in *PingRequest, opts ...g
 	return out, nil
 }
 
+func (c *authServiceClient) UserRegister(ctx context.Context, in *UserRegisterRequest, opts ...grpc.CallOption) (*UserRegisterResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UserRegisterResponse)
+	err := c.cc.Invoke(ctx, AuthService_UserRegister_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthServiceServer is the server API for AuthService service.
 // All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility.
@@ -56,6 +68,7 @@ func (c *authServiceClient) Ping(ctx context.Context, in *PingRequest, opts ...g
 // Определение сервиса AuthService
 type AuthServiceServer interface {
 	Ping(context.Context, *PingRequest) (*PingResponse, error)
+	UserRegister(context.Context, *UserRegisterRequest) (*UserRegisterResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -68,6 +81,9 @@ type UnimplementedAuthServiceServer struct{}
 
 func (UnimplementedAuthServiceServer) Ping(context.Context, *PingRequest) (*PingResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Ping not implemented")
+}
+func (UnimplementedAuthServiceServer) UserRegister(context.Context, *UserRegisterRequest) (*UserRegisterResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UserRegister not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 func (UnimplementedAuthServiceServer) testEmbeddedByValue()                     {}
@@ -108,6 +124,24 @@ func _AuthService_Ping_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthService_UserRegister_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserRegisterRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).UserRegister(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_UserRegister_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).UserRegister(ctx, req.(*UserRegisterRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AuthService_ServiceDesc is the grpc.ServiceDesc for AuthService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -118,6 +152,10 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Ping",
 			Handler:    _AuthService_Ping_Handler,
+		},
+		{
+			MethodName: "UserRegister",
+			Handler:    _AuthService_UserRegister_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
