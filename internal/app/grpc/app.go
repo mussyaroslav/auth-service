@@ -1,9 +1,9 @@
 package grpcapp
 
 import (
+	"auth-service/internal/services/auth"
 	AuthServices "auth-service/internal/services/grpc-server/auth-service"
 	"fmt"
-	"github.com/jmoiron/sqlx"
 	"log/slog"
 	"net"
 
@@ -17,13 +17,9 @@ type App struct {
 }
 
 // New creates new gRPC server application
-func New(
-	log *slog.Logger,
-	port int,
-	db *sqlx.DB,
-) *App {
+func New(log *slog.Logger, port int, authApp *auth.Service) *App {
 	gRPCServer := grpc.NewServer()
-	AuthServices.Register(gRPCServer, log, db)
+	AuthServices.Register(gRPCServer, log, authApp)
 
 	return &App{
 		log:        log,

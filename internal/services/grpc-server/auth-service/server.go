@@ -2,15 +2,14 @@ package auth_service
 
 import (
 	apiAuthServices "auth-service/generate/auth-service"
+	"auth-service/internal/services/auth"
 	"google.golang.org/grpc"
 	"log/slog"
-
-	"github.com/jmoiron/sqlx"
 )
 
 type serverAPI struct {
-	log *slog.Logger
-	db  *sqlx.DB
+	log     *slog.Logger
+	authApp *auth.Service
 	apiAuthServices.UnimplementedAuthServiceServer
 }
 
@@ -18,7 +17,7 @@ type serverAPI struct {
 func Register(
 	gRPC *grpc.Server,
 	log *slog.Logger,
-	db *sqlx.DB,
+	authApp *auth.Service,
 ) {
-	apiAuthServices.RegisterAuthServiceServer(gRPC, &serverAPI{log: log, db: db})
+	apiAuthServices.RegisterAuthServiceServer(gRPC, &serverAPI{log: log, authApp: authApp})
 }

@@ -3,12 +3,8 @@ package app
 import (
 	"auth-service/config"
 	grpcapp "auth-service/internal/app/grpc"
-	"auth-service/internal/models"
-	pgClient "auth-service/pkg/storage/pg-client"
-	"fmt"
+	"auth-service/internal/services/auth"
 	"log/slog"
-	"os"
-	"strconv"
 )
 
 type App struct {
@@ -17,18 +13,8 @@ type App struct {
 }
 
 func New(log *slog.Logger, cfg *config.Config) *App {
-	// создаем postgres клиента
-	db, err := pgClient.NewDB(&cfg.Storage)
-	if err != nil {
-		fmt.Println("Failed connection to the DB. Check config.yml!")
-		os.Exit(2)
-	}
-	log.Info("DB auth client ready",
-		slog.String("address", cfg.Storage.Host+":"+strconv.Itoa(cfg.Storage.Port)),
-	)
-	models.SetDB(db)
-
-	grpcApp := grpcapp.New(log, cfg.GRPC.Port, db)
+	authApp := auth.New(log, cfg)
+	grpcApp := grpcapp.New(log, cfg.GRPC.Port, authApp)
 
 	return &App{
 		log:        log,
