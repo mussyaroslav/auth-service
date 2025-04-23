@@ -10,6 +10,7 @@ import (
 type App struct {
 	log        *slog.Logger
 	GRPCServer *grpcapp.App
+	AuthApp    *auth.Service
 }
 
 func New(log *slog.Logger, cfg *config.Config) *App {
@@ -19,6 +20,7 @@ func New(log *slog.Logger, cfg *config.Config) *App {
 	return &App{
 		log:        log,
 		GRPCServer: grpcApp,
+		AuthApp:    authApp,
 	}
 }
 
@@ -30,4 +32,6 @@ func (a *App) MustRun() {
 
 func (a *App) Stop() {
 	a.GRPCServer.Stop()
+	a.AuthApp.Close()
+	a.log.Info("Application is stopped")
 }

@@ -3,6 +3,7 @@ package auth
 import (
 	"auth-service/config"
 	"auth-service/internal/models"
+	"auth-service/pkg/logger"
 	pgClient "auth-service/pkg/storage/pg-client"
 	"log/slog"
 	"os"
@@ -25,5 +26,21 @@ func New(log *slog.Logger, cfg *config.Config) *Service {
 	)
 	models.SetDB(db)
 
-	return &Service{log: log}
+	return &Service{log: log.With("proc", "auth")}
+}
+
+// Start запускает службы
+func (s *Service) Start() {}
+
+// Close закрывает службы
+func (s *Service) Close() {
+	if models.GetDB() != nil {
+		err := models.CloseDB()
+		if err != nil {
+			s.log.Error("Failed to close DB", logger.Err(err))
+		}
+		s.log.Info("DB client closed")
+	}
+
+	s.log.Info("Service is stopped")
 }
