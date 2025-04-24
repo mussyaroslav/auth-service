@@ -32,14 +32,6 @@ CREATE TRIGGER set_username
     FOR EACH ROW
 EXECUTE PROCEDURE generate_username();
 
--- Таблица для хранения дополнительных учетных данных пользователей
-CREATE TABLE auth.credentials
-(
-    credential_id SERIAL PRIMARY KEY,                  -- Уникальный идентификатор для каждой записи учетных данных
-    user_id       INT REFERENCES auth.users (user_id), -- Внешний ключ, ссылающийся на таблицу users
-    last_login    TIMESTAMP                            -- Время последнего входа пользователя
-);
-
 -- Таблица ролей, определяющая различные роли пользователей
 CREATE TABLE auth.roles
 (
@@ -62,15 +54,6 @@ CREATE TABLE auth.password_reset_requests
     user_id         INT REFERENCES auth.users (user_id), -- Внешний ключ, ссылающийся на таблицу users
     token_value     VARCHAR(255) NOT NULL,               -- Токен для сброса пароля, обязательный
     expiration_time TIMESTAMP    NOT NULL                -- Время истечения токена, обязательное
-);
-
--- Таблица для отслеживания сессий пользователей
-CREATE TABLE auth.sessions
-(
-    session_id    SERIAL PRIMARY KEY,                  -- Уникальный идентификатор сессии
-    user_id       INT REFERENCES auth.users (user_id), -- Внешний ключ, ссылающийся на таблицу users
-    login_time    TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Время начала сессии
-    last_activity TIMESTAMP                            -- Время последней активности в сессии
 );
 
 -- Таблица для хранения токенов аутентификации
