@@ -18,7 +18,7 @@ func New(log *slog.Logger, cfg *config.Config) *Service {
 	// создаем postgres клиента auth
 	db, err := pgClient.NewDB(&cfg.Storage)
 	if err != nil {
-		log.Warn("Failed connection to the auth DB. Check config.yml!")
+		log.Warn("Failed connection to the auth DB. Check config.yaml!")
 		os.Exit(2)
 	}
 	log.Info("DB auth client ready",

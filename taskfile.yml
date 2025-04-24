@@ -38,9 +38,9 @@ tasks:
       - task: gen
       - echo 'Run project...';
       - if [ {{eq OS "windows"}} ]; then
-          go run '.\cmd\auth-service\' -config=config.yml;
+          go run '.\cmd\auth-service\' -config=config.yaml;
         else
-          go run ./cmd/auth-service/ -config=config.yml;
+          go run ./cmd/auth-service/ -config=config.yaml;
         fi
 
   build:
@@ -67,7 +67,7 @@ tasks:
       - task: clear
       - echo 'Start project...';
       - if [ {{eq OS "windows"}} ]; then
-        cmd.exe /c '.\auth-service.exe -config=config.yml';
+        cmd.exe /c '.\auth-service.exe -config=config.yaml';
         else
-        ./auth-service -config=config.yml;
+        ./auth-service -config=config.yaml;
         fi
