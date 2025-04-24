@@ -1,5 +1,6 @@
 -- Создание схемы auth
-CREATE SCHEMA IF NOT EXISTS auth;
+CREATE SCHEMA IF NOT EXISTS auth
+    authorization auth;
 
 -- Таблица пользователей, хранящая основную информацию о пользователях
 CREATE TABLE auth.users
