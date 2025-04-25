@@ -36,7 +36,8 @@ EXECUTE PROCEDURE generate_username();
 CREATE TABLE auth.roles
 (
     role_id   SERIAL PRIMARY KEY,         -- Уникальный идентификатор роли
-    role_name VARCHAR(50) UNIQUE NOT NULL -- Имя роли, уникальное и обязательное
+    role_name VARCHAR(50) UNIQUE NOT NULL, -- Имя роли, уникальное и обязательное
+    role_description VARCHAR(128) -- Описание роли
 );
 
 -- Таблица, связывающая пользователей с их ролями
