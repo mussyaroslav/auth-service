@@ -9,8 +9,8 @@ CREATE TABLE auth.users
     username      VARCHAR(50) UNIQUE,                 -- Уникальное имя пользователя
     email         VARCHAR(255) UNIQUE NOT NULL,       -- Электронная почта пользователя, уникальная и обязательная
     password_hash VARCHAR(255)        NOT NULL,       -- Хешированный пароль, обязательный
-    first_name    VARCHAR(100)        NOT NULL,       -- Имя пользователя, обязательное
-    last_name     VARCHAR(100)        NOT NULL,       -- Фамилия пользователя, обязательная
+    first_name    VARCHAR(100),                       -- Имя пользователя, обязательное
+    last_name     VARCHAR(100),                       -- Фамилия пользователя, обязательная
     created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Время создания учетной записи
 );
 
@@ -35,9 +35,9 @@ EXECUTE PROCEDURE generate_username();
 -- Таблица ролей, определяющая различные роли пользователей
 CREATE TABLE auth.roles
 (
-    role_id   SERIAL PRIMARY KEY,         -- Уникальный идентификатор роли
-    role_name VARCHAR(50) UNIQUE NOT NULL, -- Имя роли, уникальное и обязательное
-    role_description VARCHAR(128) -- Краткое описание роли
+    role_id          SERIAL PRIMARY KEY,          -- Уникальный идентификатор роли
+    role_name        VARCHAR(50) UNIQUE NOT NULL, -- Имя роли, уникальное и обязательное
+    role_description VARCHAR(128)                 -- Краткое описание роли
 );
 
 -- Таблица, связывающая пользователей с их ролями

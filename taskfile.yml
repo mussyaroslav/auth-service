@@ -22,9 +22,13 @@ tasks:
       - task: clear
       - echo 'Generate code from proto files...';
       - if [ {{eq OS "windows"}} ]; then
-          protoc -I '.\api\proto' '.\api\proto\auth-service\*.proto' --go_out='.\generate' --go_opt=paths=source_relative --go-grpc_out='.\generate' --go-grpc_opt=paths=source_relative;
+        protoc -I '.\api\proto' '.\api\proto\auth-service\*.proto' --go_out='.\generate' --go_opt=paths=source_relative --go-grpc_out='.\generate' --go-grpc_opt=paths=source_relative;
+        protoc -I '.\api\proto' '.\api\proto\google\rpc\*.proto' --go_out='.\generate' --go_opt=paths=source_relative --go-grpc_out='.\generate' --go-grpc_opt=paths=source_relative;
+        protoc -I '.\api\proto' '.\api\proto\google\protobuf\*.proto' --go_out='.\generate' --go_opt=paths=source_relative --go-grpc_out='.\generate' --go-grpc_opt=paths=source_relative;
         else
-          protoc -I ./api/proto ./api/proto/auth-service/*.proto --go_out=./generate --go_opt=paths=source_relative --go-grpc_out=./generate --go-grpc_opt=paths=source_relative;
+        protoc -I ./api/proto ./api/proto/auth-service/*.proto --go_out=./generate --go_opt=paths=source_relative --go-grpc_out=./generate --go-grpc_opt=paths=source_relative;
+        protoc -I ./api/proto ./api/proto/google/rpc/*.proto --go_out=./generate --go_opt=paths=source_relative --go-grpc_out=./generate --go-grpc_opt=paths=source_relative;
+        protoc -I ./api/proto ./api/proto/google/protobuf/*.proto --go_out=./generate --go_opt=paths=source_relative --go-grpc_out=./generate --go-grpc_opt=paths=source_relative;
         fi
       - echo 'SUCCESS';
 
