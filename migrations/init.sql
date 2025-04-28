@@ -9,8 +9,6 @@ CREATE TABLE auth.users
     username      VARCHAR(50) UNIQUE,                 -- Уникальное имя пользователя
     email         VARCHAR(255) UNIQUE NOT NULL,       -- Электронная почта пользователя, уникальная и обязательная
     password_hash VARCHAR(255)        NOT NULL,       -- Хешированный пароль, обязательный
-    first_name    VARCHAR(100),                       -- Имя пользователя, обязательное
-    last_name     VARCHAR(100),                       -- Фамилия пользователя, обязательная
     created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Время создания учетной записи
 );
 
