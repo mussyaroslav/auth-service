@@ -229,10 +229,10 @@ const file_auth_service_auth_service_proto_rawDesc = "" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x1b\n" +
 	"\tjwt_token\x18\x02 \x01(\tR\bjwtToken\x12-\n" +
 	"\x05error\x18\x03 \x01(\v2\x12.google.rpc.StatusH\x00R\x05error\x88\x01\x01B\b\n" +
-	"\x06_error2\xab\x01\n" +
+	"\x06_error2\xa7\x01\n" +
 	"\vAuthService\x12E\n" +
-	"\x04Ping\x12\x1c.api.AuthService.PingRequest\x1a\x1d.api.AuthService.PingResponse\"\x00\x12U\n" +
-	"\fUserRegister\x12 .api.AuthService.RegisterRequest\x1a!.api.AuthService.RegisterResponse\"\x00B?Z=github.com/mussyaroslav/auth-service/generate/api.authserviceb\x06proto3"
+	"\x04Ping\x12\x1c.api.AuthService.PingRequest\x1a\x1d.api.AuthService.PingResponse\"\x00\x12Q\n" +
+	"\bRegister\x12 .api.AuthService.RegisterRequest\x1a!.api.AuthService.RegisterResponse\"\x00B?Z=github.com/mussyaroslav/auth-service/generate/api.authserviceb\x06proto3"
 
 var (
 	file_auth_service_auth_service_proto_rawDescOnce sync.Once
@@ -257,9 +257,9 @@ var file_auth_service_auth_service_proto_goTypes = []any{
 var file_auth_service_auth_service_proto_depIdxs = []int32{
 	4, // 0: api.AuthService.RegisterResponse.error:type_name -> google.rpc.Status
 	0, // 1: api.AuthService.AuthService.Ping:input_type -> api.AuthService.PingRequest
-	2, // 2: api.AuthService.AuthService.UserRegister:input_type -> api.AuthService.RegisterRequest
+	2, // 2: api.AuthService.AuthService.Register:input_type -> api.AuthService.RegisterRequest
 	1, // 3: api.AuthService.AuthService.Ping:output_type -> api.AuthService.PingResponse
-	3, // 4: api.AuthService.AuthService.UserRegister:output_type -> api.AuthService.RegisterResponse
+	3, // 4: api.AuthService.AuthService.Register:output_type -> api.AuthService.RegisterResponse
 	3, // [3:5] is the sub-list for method output_type
 	1, // [1:3] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name

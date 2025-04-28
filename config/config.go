@@ -12,6 +12,7 @@ type Config struct {
 	LogFile `yaml:"logFile"`
 	GRPC    `yaml:"grpc"`
 	Storage StorageData `yaml:"storage"`
+	Cert    Cert        `yaml:"cert"`
 }
 
 type LogFile struct {
@@ -31,6 +32,10 @@ type StorageData struct {
 	Port     int    `yaml:"port" env-default:"5432"`
 	Database string `yaml:"database"`
 	Schema   string `yaml:"schema"`
+}
+
+type Cert struct {
+	Jwt string `yaml:"jwt"`
 }
 
 var cfg *Config

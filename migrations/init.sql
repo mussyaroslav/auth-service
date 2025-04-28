@@ -1,6 +1,5 @@
 -- Схема для аутентификации и авторизации пользователей
-CREATE SCHEMA IF NOT EXISTS auth
-    AUTHORIZATION auth;
+CREATE SCHEMA IF NOT EXISTS auth;
 
 -- Таблица пользователей
 CREATE TABLE auth.users
@@ -72,3 +71,8 @@ CREATE TABLE auth.tokens
 CREATE INDEX idx_users_email ON auth.users (email); -- Для быстрого поиска по email
 CREATE INDEX idx_tokens_user_id ON auth.tokens (user_id); -- Для быстрого поиска токенов пользователя
 CREATE INDEX idx_password_reset_token ON auth.password_reset_requests (token_value); -- Для быстрого поиска токена сброса пароля
+
+-- Создание роли "reader" в таблице ролей
+INSERT INTO auth.roles (role_name, role_description)
+VALUES ('reader', 'Базовая роль с правами на чтение контента')
+ON CONFLICT (role_name) DO NOTHING;

@@ -3,6 +3,7 @@ package grpcapp
 import (
 	"auth-service/internal/services/auth"
 	AuthServices "auth-service/internal/services/grpc-server/auth-service"
+	"auth-service/internal/services/validator"
 	"fmt"
 	"log/slog"
 	"net"
@@ -17,9 +18,9 @@ type App struct {
 }
 
 // New creates new gRPC server application
-func New(log *slog.Logger, port int, authApp *auth.Service) *App {
+func New(log *slog.Logger, port int, authApp *auth.Service, validator *validator.Validator) *App {
 	gRPCServer := grpc.NewServer()
-	AuthServices.Register(gRPCServer, log, authApp)
+	AuthServices.Register(gRPCServer, log, authApp, validator)
 
 	return &App{
 		log:        log,

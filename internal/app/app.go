@@ -4,6 +4,7 @@ import (
 	"auth-service/config"
 	grpcapp "auth-service/internal/app/grpc"
 	"auth-service/internal/services/auth"
+	"auth-service/internal/services/validator"
 	"log/slog"
 )
 
@@ -15,7 +16,8 @@ type App struct {
 
 func New(log *slog.Logger, cfg *config.Config) *App {
 	authApp := auth.New(log, cfg)
-	grpcApp := grpcapp.New(log, cfg.GRPC.Port, authApp)
+	validatorApp := validator.New(log)
+	grpcApp := grpcapp.New(log, cfg.GRPC.Port, authApp, validatorApp)
 
 	return &App{
 		log:        log,

@@ -12,6 +12,7 @@ import (
 
 type Service struct {
 	log *slog.Logger
+	cfg *config.Config
 }
 
 func New(log *slog.Logger, cfg *config.Config) *Service {
@@ -26,7 +27,7 @@ func New(log *slog.Logger, cfg *config.Config) *Service {
 	)
 	models.SetDB(db)
 
-	return &Service{log: log.With("proc", "auth")}
+	return &Service{log: log.With("proc", "auth"), cfg: cfg}
 }
 
 // Start запускает службы

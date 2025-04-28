@@ -19,8 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AuthService_Ping_FullMethodName         = "/api.AuthService.AuthService/Ping"
-	AuthService_UserRegister_FullMethodName = "/api.AuthService.AuthService/UserRegister"
+	AuthService_Ping_FullMethodName     = "/api.AuthService.AuthService/Ping"
+	AuthService_Register_FullMethodName = "/api.AuthService.AuthService/Register"
 )
 
 // AuthServiceClient is the client API for AuthService service.
@@ -28,7 +28,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthServiceClient interface {
 	Ping(ctx context.Context, in *PingRequest, opts ...grpc.CallOption) (*PingResponse, error)
-	UserRegister(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
+	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 }
 
 type authServiceClient struct {
@@ -49,10 +49,10 @@ func (c *authServiceClient) Ping(ctx context.Context, in *PingRequest, opts ...g
 	return out, nil
 }
 
-func (c *authServiceClient) UserRegister(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error) {
+func (c *authServiceClient) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(RegisterResponse)
-	err := c.cc.Invoke(ctx, AuthService_UserRegister_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, AuthService_Register_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -64,7 +64,7 @@ func (c *authServiceClient) UserRegister(ctx context.Context, in *RegisterReques
 // for forward compatibility.
 type AuthServiceServer interface {
 	Ping(context.Context, *PingRequest) (*PingResponse, error)
-	UserRegister(context.Context, *RegisterRequest) (*RegisterResponse, error)
+	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -78,8 +78,8 @@ type UnimplementedAuthServiceServer struct{}
 func (UnimplementedAuthServiceServer) Ping(context.Context, *PingRequest) (*PingResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Ping not implemented")
 }
-func (UnimplementedAuthServiceServer) UserRegister(context.Context, *RegisterRequest) (*RegisterResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UserRegister not implemented")
+func (UnimplementedAuthServiceServer) Register(context.Context, *RegisterRequest) (*RegisterResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 func (UnimplementedAuthServiceServer) testEmbeddedByValue()                     {}
@@ -120,20 +120,20 @@ func _AuthService_Ping_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AuthService_UserRegister_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _AuthService_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(RegisterRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServiceServer).UserRegister(ctx, in)
+		return srv.(AuthServiceServer).Register(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: AuthService_UserRegister_FullMethodName,
+		FullMethod: AuthService_Register_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).UserRegister(ctx, req.(*RegisterRequest))
+		return srv.(AuthServiceServer).Register(ctx, req.(*RegisterRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -150,8 +150,8 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _AuthService_Ping_Handler,
 		},
 		{
-			MethodName: "UserRegister",
-			Handler:    _AuthService_UserRegister_Handler,
+			MethodName: "Register",
+			Handler:    _AuthService_Register_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
