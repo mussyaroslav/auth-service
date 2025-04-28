@@ -16,7 +16,7 @@ type App struct {
 
 func New(log *slog.Logger, cfg *config.Config) *App {
 	authApp := auth.New(log, cfg)
-	validatorApp := validator.New(log)
+	validatorApp := validator.New()
 	grpcApp := grpcapp.New(log, cfg.GRPC.Port, authApp, validatorApp)
 
 	return &App{
