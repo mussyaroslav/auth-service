@@ -17,9 +17,7 @@ const (
 	roleReader = 1
 )
 
-// RegisterRequest предназначена для объединения данных, получаемых во время регистрации,
-// чтобы их можно было легко передать в дальнейшие этапы обработки, такие как проверка,
-// хеширование пароля и сохранение в базу данных.
+// RegisterRequest предназначена для объединения данных, получаемых во время регистрации
 type RegisterRequest struct {
 	Email    string `db:"email" json:"email"`
 	Password string `db:"password" json:"password"`
@@ -29,6 +27,7 @@ type RegisterResponse struct {
 	UserID   uuid.UUID `json:"user_id"`
 	JWTToken string    `json:"jwt_token"`
 }
+
 type User struct {
 	UserId   uuid.UUID `db:"user_id" json:"user_id"`
 	Username string    `db:"username" json:"username"`
