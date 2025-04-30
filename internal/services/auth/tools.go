@@ -4,10 +4,13 @@ import (
 	"auth-service/internal/models"
 	"auth-service/pkg/lib"
 	"context"
+	"crypto/sha256"
+	"encoding/base64"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 	"log/slog"
+	"strings"
 	"time"
 )
 
@@ -17,9 +20,38 @@ func (s *Service) HashPassword(password string) (string, error) {
 	return string(bytes), err
 }
 
-func CheckPasswordHash(password, hash string) bool {
+func (s *Service) CheckPasswordHash(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
+}
+
+// HashEmail возвращает безопасный хеш email для логирования
+// Формат: первые_3_символа@хеш_домена
+func (s *Service) HashEmail(email string) string {
+	email = strings.TrimSpace(strings.ToLower(email))
+	parts := strings.Split(email, "@")
+	if len(parts) != 2 {
+		return "invalid_email"
+	}
+
+	localPart := parts[0]
+	domain := parts[1]
+
+	// Хешируем домен с перцем
+	domainHash := sha256.Sum256([]byte(domain + s.cfg.Cert.EmailPepper))
+	encodedDomain := base64.URLEncoding.EncodeToString(domainHash[:])[:8]
+
+	// Сохраняем часть информации для отладки
+	var prefix string
+	if len(localPart) > 3 {
+		prefix = localPart[:3]
+	} else if len(localPart) > 0 {
+		prefix = localPart
+	} else {
+		prefix = "xxx"
+	}
+
+	return prefix + "@" + encodedDomain
 }
 
 // CreateToken создает jwt token
@@ -45,8 +77,7 @@ func (s *Service) CreateToken(email string, userID uuid.UUID) (string, error) {
 	}
 
 	s.log.Info("Generate Jwt-token",
-		slog.String("userID", userID.String()),
-		slog.String("email", email),
+		slog.String("email", s.HashEmail(email)),
 		slog.String("token", lib.MaskedText(tokenString, 3)),
 	)
 

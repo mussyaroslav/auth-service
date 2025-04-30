@@ -18,3 +18,4 @@ storage:
 
 cert:
   jwt: ""
+  email_pepper: ""

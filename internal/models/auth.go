@@ -17,21 +17,21 @@ const (
 	roleReader = 1
 )
 
-// RegisterRequest предназначена для объединения данных, получаемых во время регистрации
-type RegisterRequest struct {
+// AuthRequest предназначена для объединения данных, получаемых во время регистрации
+type AuthRequest struct {
 	Email    string `db:"email" json:"email"`
 	Password string `db:"password" json:"password"`
 }
 
-type RegisterResponse struct {
-	UserID   uuid.UUID `json:"user_id"`
-	JWTToken string    `json:"jwt_token"`
+type AuthResponse struct {
+	JWTToken string `json:"jwt_token"`
 }
 
 type User struct {
-	UserId   uuid.UUID `db:"user_id" json:"user_id"`
-	Username string    `db:"username" json:"username"`
-	Email    string    `db:"email" json:"email"`
+	UserId       uuid.UUID `db:"user_id" json:"user_id"`
+	Username     string    `db:"username" json:"username"`
+	Email        string    `db:"email" json:"email"`
+	PasswordHash string    `db:"password_hash" json:"-"` // Не включаем в JSON
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -112,4 +112,25 @@ func GetUserRoles(ctx context.Context, userID uuid.UUID) ([]string, error) {
 	}
 
 	return roles, nil
+}
+
+// GetUserByEmail получает пользователя из базы данных по email
+func GetUserByEmail(ctx context.Context, email string) (*User, error) {
+	query := `
+		SELECT user_id, username, email, password_hash
+		FROM auth.users
+		WHERE email = $1
+	`
+
+	user := new(User)
+
+	err := db.GetContext(ctx, user, query, email)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, status.Error(codes.NotFound, "пользователь не найден")
+		}
+		return nil, status.Errorf(codes.Internal, "ошибка при получении пользователя: %v", err)
+	}
+
+	return user, nil
 }

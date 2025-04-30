@@ -35,7 +35,8 @@ type StorageData struct {
 }
 
 type Cert struct {
-	Jwt string `yaml:"jwt"`
+	Jwt         string `yaml:"jwt"`
+	EmailPepper string `yaml:"email_pepper"`
 }
 
 var cfg *Config
