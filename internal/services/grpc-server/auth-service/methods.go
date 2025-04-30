@@ -100,7 +100,7 @@ func (s *serverAPI) Login(
 		return nil, err
 	}
 
-	l.Info("успешный вход в систему")
+	l.Debug("успешный вход в систему")
 	return &apiAuthServices.LoginResponse{
 		JwtToken: rsp.JWTToken,
 	}, nil

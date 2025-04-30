@@ -18,7 +18,7 @@ func (s *Service) Register(ctx context.Context, request *models.AuthRequest) (*m
 	hashedEmail := s.HashEmail(request.Email)
 	l := s.log.With(slog.String("email_hash", hashedEmail), slog.String("op", "register"))
 
-	l.Info("начало регистрации пользователя")
+	l.Debug("начало регистрации пользователя")
 
 	// 1. Хеширование пароля
 	hashedPwd, err := s.HashPassword(request.Password)
@@ -42,7 +42,7 @@ func (s *Service) Register(ctx context.Context, request *models.AuthRequest) (*m
 		return nil, status.Error(codes.Internal, "failed to create token")
 	}
 
-	l.Info("пользователь успешно зарегистрирован")
+	l.Debug("пользователь успешно зарегистрирован")
 
 	return &models.AuthResponse{
 		JWTToken: token,
@@ -54,7 +54,7 @@ func (s *Service) Login(ctx context.Context, request *models.AuthRequest) (*mode
 	hashedEmail := s.HashEmail(request.Email)
 	l := s.log.With(slog.String("email_hash", hashedEmail), slog.String("op", "login"))
 
-	l.Info("попытка входа в систему")
+	l.Debug("попытка входа в систему")
 
 	// 1. Получаем пользователя по email
 	user, err := models.GetUserByEmail(ctx, request.Email)
