@@ -9,6 +9,7 @@ service AuthService {
   rpc Ping (PingRequest) returns (PingResponse) {}
   rpc Register (RegisterRequest) returns (RegisterResponse) {}
   rpc Login (LoginRequest) returns (LoginResponse) {}
+  rpc VerifyToken (VerifyTokenRequest) returns (VerifyTokenResponse) {}
 }
 
 message PingRequest {}
@@ -34,4 +35,16 @@ message LoginRequest {
 
 message LoginResponse {
   string jwt_token = 2;
+}
+
+message VerifyTokenRequest {
+  string token = 1;
+}
+
+message VerifyTokenResponse {
+  bool valid = 1;                // Валиден ли токен
+  string user_id = 2;            // ID пользователя из токена
+  string email = 3;              // Email пользователя из токена
+  repeated string roles = 4;     // Список ролей пользователя из токена
+  optional google.rpc.Status error = 5;  // Ошибка, если есть
 }

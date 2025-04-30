@@ -36,7 +36,7 @@ func (s *Service) Register(ctx context.Context, request *models.AuthRequest) (*m
 	}
 
 	// 3. Генерация JWT токена
-	token, err := s.CreateToken(user.Email, user.UserId)
+	token, err := s.CreateToken(user)
 	if err != nil {
 		l.Error("ошибка создания токена", logger.Err(err))
 		return nil, status.Error(codes.Internal, "failed to create token")
@@ -74,7 +74,7 @@ func (s *Service) Login(ctx context.Context, request *models.AuthRequest) (*mode
 	}
 
 	// 3. Создаем JWT токен (роли будут получены внутри CreateToken)
-	token, err := s.CreateToken(user.Email, user.UserId)
+	token, err := s.CreateToken(user)
 	if err != nil {
 		l.Error("ошибка при создании токена", logger.Err(err))
 		return nil, status.Errorf(codes.Internal, "ошибка при создании токена: %v", err)

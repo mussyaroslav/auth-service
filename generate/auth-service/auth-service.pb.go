@@ -302,6 +302,126 @@ func (x *LoginResponse) GetJwtToken() string {
 	return ""
 }
 
+type VerifyTokenRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Token         string                 `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *VerifyTokenRequest) Reset() {
+	*x = VerifyTokenRequest{}
+	mi := &file_auth_service_auth_service_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *VerifyTokenRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*VerifyTokenRequest) ProtoMessage() {}
+
+func (x *VerifyTokenRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_service_auth_service_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use VerifyTokenRequest.ProtoReflect.Descriptor instead.
+func (*VerifyTokenRequest) Descriptor() ([]byte, []int) {
+	return file_auth_service_auth_service_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *VerifyTokenRequest) GetToken() string {
+	if x != nil {
+		return x.Token
+	}
+	return ""
+}
+
+type VerifyTokenResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Valid         bool                   `protobuf:"varint,1,opt,name=valid,proto3" json:"valid,omitempty"`                // Валиден ли токен
+	UserId        string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"` // ID пользователя из токена
+	Email         string                 `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`                 // Email пользователя из токена
+	Roles         []string               `protobuf:"bytes,4,rep,name=roles,proto3" json:"roles,omitempty"`                 // Список ролей пользователя из токена
+	Error         *status.Status         `protobuf:"bytes,5,opt,name=error,proto3,oneof" json:"error,omitempty"`           // Ошибка, если есть
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *VerifyTokenResponse) Reset() {
+	*x = VerifyTokenResponse{}
+	mi := &file_auth_service_auth_service_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *VerifyTokenResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*VerifyTokenResponse) ProtoMessage() {}
+
+func (x *VerifyTokenResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_service_auth_service_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use VerifyTokenResponse.ProtoReflect.Descriptor instead.
+func (*VerifyTokenResponse) Descriptor() ([]byte, []int) {
+	return file_auth_service_auth_service_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *VerifyTokenResponse) GetValid() bool {
+	if x != nil {
+		return x.Valid
+	}
+	return false
+}
+
+func (x *VerifyTokenResponse) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *VerifyTokenResponse) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
+func (x *VerifyTokenResponse) GetRoles() []string {
+	if x != nil {
+		return x.Roles
+	}
+	return nil
+}
+
+func (x *VerifyTokenResponse) GetError() *status.Status {
+	if x != nil {
+		return x.Error
+	}
+	return nil
+}
+
 var File_auth_service_auth_service_proto protoreflect.FileDescriptor
 
 const file_auth_service_auth_service_proto_rawDesc = "" +
@@ -321,11 +441,21 @@ const file_auth_service_auth_service_proto_rawDesc = "" +
 	"\x05email\x18\x01 \x01(\tR\x05email\x12\x1a\n" +
 	"\bpassword\x18\x02 \x01(\tR\bpassword\",\n" +
 	"\rLoginResponse\x12\x1b\n" +
-	"\tjwt_token\x18\x02 \x01(\tR\bjwtToken2\xf1\x01\n" +
+	"\tjwt_token\x18\x02 \x01(\tR\bjwtToken\"*\n" +
+	"\x12VerifyTokenRequest\x12\x14\n" +
+	"\x05token\x18\x01 \x01(\tR\x05token\"\xa9\x01\n" +
+	"\x13VerifyTokenResponse\x12\x14\n" +
+	"\x05valid\x18\x01 \x01(\bR\x05valid\x12\x17\n" +
+	"\auser_id\x18\x02 \x01(\tR\x06userId\x12\x14\n" +
+	"\x05email\x18\x03 \x01(\tR\x05email\x12\x14\n" +
+	"\x05roles\x18\x04 \x03(\tR\x05roles\x12-\n" +
+	"\x05error\x18\x05 \x01(\v2\x12.google.rpc.StatusH\x00R\x05error\x88\x01\x01B\b\n" +
+	"\x06_error2\xcd\x02\n" +
 	"\vAuthService\x12E\n" +
 	"\x04Ping\x12\x1c.api.AuthService.PingRequest\x1a\x1d.api.AuthService.PingResponse\"\x00\x12Q\n" +
 	"\bRegister\x12 .api.AuthService.RegisterRequest\x1a!.api.AuthService.RegisterResponse\"\x00\x12H\n" +
-	"\x05Login\x12\x1d.api.AuthService.LoginRequest\x1a\x1e.api.AuthService.LoginResponse\"\x00B?Z=github.com/mussyaroslav/auth-service/generate/api.authserviceb\x06proto3"
+	"\x05Login\x12\x1d.api.AuthService.LoginRequest\x1a\x1e.api.AuthService.LoginResponse\"\x00\x12Z\n" +
+	"\vVerifyToken\x12#.api.AuthService.VerifyTokenRequest\x1a$.api.AuthService.VerifyTokenResponse\"\x00B?Z=github.com/mussyaroslav/auth-service/generate/api.authserviceb\x06proto3"
 
 var (
 	file_auth_service_auth_service_proto_rawDescOnce sync.Once
@@ -339,29 +469,34 @@ func file_auth_service_auth_service_proto_rawDescGZIP() []byte {
 	return file_auth_service_auth_service_proto_rawDescData
 }
 
-var file_auth_service_auth_service_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_auth_service_auth_service_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_auth_service_auth_service_proto_goTypes = []any{
-	(*PingRequest)(nil),      // 0: api.AuthService.PingRequest
-	(*PingResponse)(nil),     // 1: api.AuthService.PingResponse
-	(*RegisterRequest)(nil),  // 2: api.AuthService.RegisterRequest
-	(*RegisterResponse)(nil), // 3: api.AuthService.RegisterResponse
-	(*LoginRequest)(nil),     // 4: api.AuthService.LoginRequest
-	(*LoginResponse)(nil),    // 5: api.AuthService.LoginResponse
-	(*status.Status)(nil),    // 6: google.rpc.Status
+	(*PingRequest)(nil),         // 0: api.AuthService.PingRequest
+	(*PingResponse)(nil),        // 1: api.AuthService.PingResponse
+	(*RegisterRequest)(nil),     // 2: api.AuthService.RegisterRequest
+	(*RegisterResponse)(nil),    // 3: api.AuthService.RegisterResponse
+	(*LoginRequest)(nil),        // 4: api.AuthService.LoginRequest
+	(*LoginResponse)(nil),       // 5: api.AuthService.LoginResponse
+	(*VerifyTokenRequest)(nil),  // 6: api.AuthService.VerifyTokenRequest
+	(*VerifyTokenResponse)(nil), // 7: api.AuthService.VerifyTokenResponse
+	(*status.Status)(nil),       // 8: google.rpc.Status
 }
 var file_auth_service_auth_service_proto_depIdxs = []int32{
-	6, // 0: api.AuthService.RegisterResponse.error:type_name -> google.rpc.Status
-	0, // 1: api.AuthService.AuthService.Ping:input_type -> api.AuthService.PingRequest
-	2, // 2: api.AuthService.AuthService.Register:input_type -> api.AuthService.RegisterRequest
-	4, // 3: api.AuthService.AuthService.Login:input_type -> api.AuthService.LoginRequest
-	1, // 4: api.AuthService.AuthService.Ping:output_type -> api.AuthService.PingResponse
-	3, // 5: api.AuthService.AuthService.Register:output_type -> api.AuthService.RegisterResponse
-	5, // 6: api.AuthService.AuthService.Login:output_type -> api.AuthService.LoginResponse
-	4, // [4:7] is the sub-list for method output_type
-	1, // [1:4] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	8, // 0: api.AuthService.RegisterResponse.error:type_name -> google.rpc.Status
+	8, // 1: api.AuthService.VerifyTokenResponse.error:type_name -> google.rpc.Status
+	0, // 2: api.AuthService.AuthService.Ping:input_type -> api.AuthService.PingRequest
+	2, // 3: api.AuthService.AuthService.Register:input_type -> api.AuthService.RegisterRequest
+	4, // 4: api.AuthService.AuthService.Login:input_type -> api.AuthService.LoginRequest
+	6, // 5: api.AuthService.AuthService.VerifyToken:input_type -> api.AuthService.VerifyTokenRequest
+	1, // 6: api.AuthService.AuthService.Ping:output_type -> api.AuthService.PingResponse
+	3, // 7: api.AuthService.AuthService.Register:output_type -> api.AuthService.RegisterResponse
+	5, // 8: api.AuthService.AuthService.Login:output_type -> api.AuthService.LoginResponse
+	7, // 9: api.AuthService.AuthService.VerifyToken:output_type -> api.AuthService.VerifyTokenResponse
+	6, // [6:10] is the sub-list for method output_type
+	2, // [2:6] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_auth_service_auth_service_proto_init() }
@@ -370,13 +505,14 @@ func file_auth_service_auth_service_proto_init() {
 		return
 	}
 	file_auth_service_auth_service_proto_msgTypes[3].OneofWrappers = []any{}
+	file_auth_service_auth_service_proto_msgTypes[7].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_auth_service_auth_service_proto_rawDesc), len(file_auth_service_auth_service_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

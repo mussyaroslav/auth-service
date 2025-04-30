@@ -7,6 +7,7 @@ import (
 	"context"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"log/slog"
 	"time"
 )
 
@@ -102,5 +103,47 @@ func (s *serverAPI) Login(
 	l.Info("успешный вход в систему")
 	return &apiAuthServices.LoginResponse{
 		JwtToken: rsp.JWTToken,
+	}, nil
+}
+
+// VerifyToken проверяет JWT токен и возвращает информацию о пользователе
+func (s *serverAPI) VerifyToken(
+	ctx context.Context,
+	req *apiAuthServices.VerifyTokenRequest,
+) (*apiAuthServices.VerifyTokenResponse, error) {
+	l := s.log.With("op", "api_verify_token")
+	l.Debug("попытка проверки токена")
+
+	// Валидация входных данных
+	if req.GetToken() == "" {
+		l.Debug("ошибка валидации: пустой токен")
+		return nil, status.Error(codes.InvalidArgument, "empty token")
+	}
+
+	// Установка таймаута для контекста
+	ctx, cancel := context.WithTimeout(ctx, timeOutAuth)
+	defer cancel()
+
+	// Проверка токена через сервис
+	tokenInfo, err := s.authApp.VerifyToken(ctx, req.GetToken())
+	if err != nil {
+		l.Debug("ошибка проверки токена", logger.Err(err))
+		return &apiAuthServices.VerifyTokenResponse{
+			Valid: false,
+			Error: status.New(codes.Unauthenticated, err.Error()).Proto(),
+		}, nil
+	}
+
+	l.Debug("токен успешно проверен",
+		slog.String("email", s.authApp.HashEmail(tokenInfo.Email)),
+	)
+
+	// Формируем ответ с данными пользователя
+	return &apiAuthServices.VerifyTokenResponse{
+		Valid:  true,
+		UserId: tokenInfo.UserID,
+		Email:  tokenInfo.Email,
+		Roles:  tokenInfo.Roles,
+		Error:  nil,
 	}, nil
 }
