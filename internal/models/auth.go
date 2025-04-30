@@ -116,6 +116,9 @@ func GetUserRoles(ctx context.Context, userID uuid.UUID) ([]string, error) {
 
 // GetUserByEmail получает пользователя из базы данных по email
 func GetUserByEmail(ctx context.Context, email string) (*User, error) {
+	ctx, cancel := context.WithTimeout(ctx, dbTimeOut)
+	defer cancel()
+
 	query := `
 		SELECT user_id, username, email, password_hash
 		FROM auth.users
