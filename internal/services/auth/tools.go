@@ -2,11 +2,11 @@ package auth
 
 import (
 	"auth-service/internal/models"
-	"auth-service/pkg/lib"
 	"context"
 	"crypto/sha256"
 	"encoding/base64"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/mussyaroslav/libs/helper"
 	"golang.org/x/crypto/bcrypt"
 	"log/slog"
 	"strings"
@@ -78,7 +78,7 @@ func (s *Service) CreateToken(user *models.User) (string, error) {
 
 	s.log.Info("Generate Jwt-token",
 		slog.String("email", s.HashEmail(user.Email)),
-		slog.String("token", lib.MaskedText(tokenString, 3)),
+		slog.String("token", helper.MaskedText(tokenString, 3)),
 	)
 
 	return tokenString, nil
