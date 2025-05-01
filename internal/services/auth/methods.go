@@ -6,6 +6,8 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"fmt"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -42,7 +44,7 @@ func (s *Service) Register(ctx context.Context, request *models.AuthRequest) (*m
 		return nil, status.Error(codes.Internal, "failed to create token")
 	}
 
-	l.Debug("пользователь успешно зарегистрирован")
+	l.Info("пользователь успешно зарегистрирован")
 
 	return &models.AuthResponse{
 		JWTToken: token,
@@ -83,5 +85,87 @@ func (s *Service) Login(ctx context.Context, request *models.AuthRequest) (*mode
 	l.Info("успешный вход в систему")
 	return &models.AuthResponse{
 		JWTToken: token,
+	}, nil
+}
+
+// VerifyToken проверяет JWT токен и извлекает данные пользователя
+func (s *Service) VerifyToken(_ context.Context, tokenString string) (*models.TokenInfo, error) {
+	// Парсим токен
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		// Проверяем, что используется правильный алгоритм подписи
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("неожиданный метод подписи: %v", token.Header["alg"])
+		}
+		return []byte(s.cfg.Cert.Jwt), nil
+	})
+
+	// Обрабатываем ошибки парсинга
+	if err != nil {
+		s.log.Warn("Ошибка при парсинге токена", slog.String("ошибка", err.Error()))
+		return nil, fmt.Errorf("недействительный токен: %w", err)
+	}
+
+	// Проверяем валидность токена
+	if !token.Valid {
+		s.log.Warn("Токен недействителен")
+		return nil, errors.New("токен недействителен")
+	}
+
+	// Извлекаем claims
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		s.log.Warn("Не удалось извлечь claims из токена")
+		return nil, errors.New("не удалось извлечь данные из токена")
+	}
+
+	// Проверяем issuer
+	if iss, ok := claims["iss"].(string); !ok || iss != "auth-service" {
+		s.log.Warn("Недействительный издатель токена", slog.String("издатель", fmt.Sprintf("%v", claims["iss"])))
+		return nil, errors.New("недействительный издатель токена")
+	}
+
+	// Проверяем audience
+	if aud, ok := claims["aud"].(string); !ok || aud != "chef-app-services" {
+		s.log.Warn("Недействительная аудитория токена", slog.String("аудитория", fmt.Sprintf("%v", claims["aud"])))
+		return nil, errors.New("недействительная аудитория токена")
+	}
+
+	// Извлекаем userId
+	userID, ok := claims["sub"].(string)
+	if !ok || userID == "" {
+		s.log.Warn("Недействительный или отсутствующий ID пользователя в токене")
+		return nil, errors.New("недействительный ID пользователя в токене")
+	}
+
+	// Извлекаем email
+	email, ok := claims["email"].(string)
+	if !ok || email == "" {
+		s.log.Warn("Недействительный или отсутствующий email в токене")
+		return nil, errors.New("недействительный email в токене")
+	}
+
+	// Извлекаем роли
+	var roles []string
+	if rolesInterface, ok := claims["roles"]; ok {
+		if rolesArray, ok := rolesInterface.([]interface{}); ok {
+			for _, role := range rolesArray {
+				if roleStr, ok := role.(string); ok {
+					roles = append(roles, roleStr)
+				}
+			}
+		}
+	}
+
+	// Логируем успешную проверку
+	s.log.Info("Токен успешно проверен",
+		slog.String("email", s.HashEmail(email)),
+	)
+
+	// Возвращаем информацию о токене
+	return &models.TokenInfo{
+		UserID:  userID,
+		Email:   email,
+		Roles:   roles,
+		IsValid: true,
 	}, nil
 }

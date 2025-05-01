@@ -54,7 +54,7 @@ func (s *serverAPI) Register(
 		return nil, err
 	}
 
-	l.Debug("регистрация успешно завершена")
+	l.Info("регистрация успешно завершена")
 	return &apiAuthServices.RegisterResponse{
 		JwtToken: rsp.JWTToken,
 		Error:    nil,
@@ -100,7 +100,7 @@ func (s *serverAPI) Login(
 		return nil, err
 	}
 
-	l.Debug("успешный вход в систему")
+	l.Info("успешный вход в систему")
 	return &apiAuthServices.LoginResponse{
 		JwtToken: rsp.JWTToken,
 	}, nil
@@ -134,7 +134,7 @@ func (s *serverAPI) VerifyToken(
 		}, nil
 	}
 
-	l.Debug("токен успешно проверен",
+	l.Info("токен успешно проверен",
 		slog.String("email", s.authApp.HashEmail(tokenInfo.Email)),
 	)
 
